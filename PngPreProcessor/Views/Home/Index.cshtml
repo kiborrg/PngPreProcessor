@@ -1,0 +1,31 @@
+﻿@model IEnumerable<PngPreProcessor.Models.FileModel>
+@{
+    ViewData["Title"] = "Добавление файла";
+}
+<h3>Выберите файл для загрузки</h3>
+<form action="../home/uploadFile" method="post" enctype="multipart/form-data">
+    <input type="file" name="uploadedFile" /><br>
+    <input type="submit" value="Загрузить" />
+</form>
+
+<h3>Все файлы</h3>
+@foreach (var f in Model)
+{
+    <p>@f.Name @f.Path</p>
+    <p>Статус: @f.Status</p>
+    @if (f.Status == PngPreProcessor.Models.StatusEnum.InProcess || f.Status == PngPreProcessor.Models.StatusEnum.Canceled)
+    {
+        <p>Завершено: @f.Progress / 100</p>
+    }
+    @if (f.Status == PngPreProcessor.Models.StatusEnum.InProcess || f.Status == PngPreProcessor.Models.StatusEnum.InQueueToProcess)
+    {
+        <form action="../home/cancelProcess?id=@f.Id" method="post">
+            <input type="submit" value="отмена" />
+        </form>
+    }
+    @if(f.Id < Model.Count())
+    {
+        <p>------------------------------------------------------------------------------------------------------------------------------------</p>
+    }
+    
+}
